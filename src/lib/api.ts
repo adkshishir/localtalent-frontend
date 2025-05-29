@@ -1,11 +1,11 @@
 // File: src/lib/api.ts
 import axios from 'axios';
 
-export const API_BASE_URL =
+export const VITE_API_BASE_URL =
   import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: VITE_API_BASE_URL,
   withCredentials: true, // ⭐️ Send cookies!
 });
 
@@ -29,7 +29,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const response = await axios.post(
-          `${API_BASE_URL}/auth/refresh`,
+          `${VITE_API_BASE_URL}/auth/refresh`,
           null,
           {
             withCredentials: true,

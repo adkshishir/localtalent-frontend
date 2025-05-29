@@ -19,7 +19,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Search, Star, Filter } from 'lucide-react';
 import axios from 'axios';
-import { API_BASE_URL } from '@/lib/api';
+import { VITE_API_BASE_URL } from '@/lib/api';
 type serviceType = {
   id: number;
   title: string;
@@ -46,7 +46,7 @@ const Services = () => {
   const [filteredServices, setFilteredServices] = useState<serviceType[]>([]);
   useEffect(() => {
     const fetchServices = async () => {
-      const res = await axios.get(API_BASE_URL + '/service');
+      const res = await axios.get(VITE_API_BASE_URL + '/service');
       const result = await res.data.data;
       setServices(await result);
       const categories = result.map((service: serviceType) => service.category);

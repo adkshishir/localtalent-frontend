@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Clock, Shield, MoveRightIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '@/lib/api';
+import { VITE_API_BASE_URL } from '@/lib/api';
 
 type serviceType = {
   id: number;
@@ -35,7 +35,7 @@ const Index = () => {
   const [services, setServices] = useState<serviceType[]>([]);
   useEffect(() => {
     const fetchServices = async () => {
-      const res = await axios.get(API_BASE_URL + '/service');
+      const res = await axios.get(VITE_API_BASE_URL + '/service');
       const result = await res.data.data;
       setServices(await result);
     };
