@@ -352,6 +352,11 @@ export default function DynamicTable({
                         </div>
                       </TableCell>
                     )}
+                    {endpoint == 'user' && user?.role == 'ADMIN' && (
+                      <TableCell className='whitespace-nowrap'>
+                        <DeleteModal url={`auth/${item.id}`} />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )}

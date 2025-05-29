@@ -21,7 +21,6 @@ const BookingPage = () => {
 
     fetchData();
   }, []);
-  console.log(data);
   return (
     <div>
       <DynamicTable

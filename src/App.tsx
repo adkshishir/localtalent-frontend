@@ -16,6 +16,7 @@ import ServicesPage from './pages/admin/services-page';
 import BookingPage from './pages/admin/booking-page';
 import About from './pages/about';
 import Contact from './pages/contact';
+import UserPage from './pages/admin/user-page';
 
 const App = () => (
   <AuthProvider>
@@ -33,6 +34,7 @@ const App = () => (
           <Route path='service' element={<ServicesPage />} />
           <Route path='service/:id/edit' element={<ServiceForm />} />
           <Route path='bookings' element={<BookingPage />} />
+          <Route path='users' element={<UserPage />} />
           <Route path='*' element={<NotFound />} />
         </Route>
 

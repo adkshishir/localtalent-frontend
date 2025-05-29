@@ -26,7 +26,6 @@ export default function Contact() {
 
     try {
       // TODO: Send form data to your API endpoint
-      console.log('Contact form submitted:', form);
       setForm({ name: '', email: '', message: '' });
     } catch (err) {
     } finally {

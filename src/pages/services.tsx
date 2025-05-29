@@ -58,7 +58,6 @@ const Services = () => {
 
   useEffect(() => {
     let filtered = services;
-    console.log(filtered);
     if (searchTerm?.trim() !== '') {
       filtered = filtered.filter((service) =>
         service.title.toLowerCase().includes(searchTerm.toLowerCase())

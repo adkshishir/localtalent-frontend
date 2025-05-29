@@ -41,7 +41,6 @@ const ServiceDetail = () => {
       try {
         const data = await apiHelper.get(`/service/${id}`);
         setService(data);
-        console.log(data);
       } catch (error) {
         console.error('Error fetching service:', error);
       }
