@@ -20,6 +20,7 @@ const ServiceDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showBooking, setShowBooking] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const [service, setService] = useState<null | any>({
     id: 1,
     title: 'Professional Photography',
@@ -48,7 +49,7 @@ const ServiceDetail = () => {
     fetchService();
   }, []);
   const handleBookingClick = () => {
-    const user = JSON.parse(localStorage.getItem('localtalent_user') || '{}');
+    setUser(JSON.parse(localStorage.getItem('localtalent_user') || '{}'));
     if (!user) {
       navigate('/auth/login');
       return;
@@ -166,7 +167,7 @@ const ServiceDetail = () => {
           </div>
         )}
         {/* Booking Modal */}
-        {showBooking && (
+        {showBooking && user && (
           <BookingForm
             service={service}
             onClose={() => setShowBooking(false)}

@@ -1,7 +1,14 @@
 // File: src/layouts/AdminLayout.tsx
 import { useEffect, useState } from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, Workflow, ListOrdered } from 'lucide-react';
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  Workflow,
+  ListOrdered,
+  Users,
+} from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -136,6 +143,12 @@ const navbarItems = [
     icon: <LayoutDashboard size={18} />,
     label: 'Dashboard',
     roles: ['ADMIN', 'FREELANCER', 'USER'],
+  },
+  {
+    to: '/admin/users',
+    icon: <Users size={18} />,
+    label: 'Users',
+    roles: ['ADMIN'],
   },
   {
     to: '/admin/service',
