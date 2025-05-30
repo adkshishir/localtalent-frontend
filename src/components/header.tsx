@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -23,10 +23,17 @@ import { LogOut, User, Calendar, Menu, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Header = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const [user, setUser] = useState(null);
+
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  useEffect(() => {
+    const storedUser = localStorage.getItem('localtalent_user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser || '{}'));
+    }
+  }, []);
   const handleLogout = () => {
     logout();
     navigate('/');

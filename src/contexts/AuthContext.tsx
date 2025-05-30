@@ -70,7 +70,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem('localtalent_user', JSON.stringify(data.user));
       localStorage.setItem('access_token', data.tokens.accessToken);
       setUser(data.user);
-      window.location.href = '/admin';
+      if (data.user.role === 'ADMIN' || data.user.role === 'FREELANCER')
+        window.location.href = '/admin';
+      else window.location.href = '/';
     }
     setIsLoading(false);
   };
