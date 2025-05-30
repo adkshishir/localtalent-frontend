@@ -28,7 +28,9 @@ src/
 ├── pages/            # Route-level components (login, register, dashboard, etc.)
 ├── lib/              # API helper, Axios instance
 ├── features/         # Feature modules (auth, service, booking, etc.)
-├── routes/           # Centralized route config
+├── main.tsx          # Entry point for app
+├── App.tsx           # Manage All Routes
+
 
 ```
 
@@ -37,7 +39,7 @@ src/
 ## 🔐 Authentication
 
 - Uses **access token** (stored in `localStorage`) and **refresh token** (stored in **HTTP-only cookie**)
-- Refresh logic handled via Axios interceptors
+- Refresh logic handled via Axios interceptors(test once if response is failed with 401 status code) and Auth Context(While page Reloading)
 - Automatically logs out on invalid refresh or token expiry
 
 ---
@@ -86,17 +88,20 @@ All API requests go through a centralized Axios wrapper:
 
 ## 📁 Pages Overview
 
-| Page               | Path              | Access                |
-| ------------------ | ----------------- | --------------------- |
-| Home               | `/`               | Public                |
-| Login              | `/login`          | Public                |
-| Register           | `/register`       | Public                |
-| Services List      | `/services`       | Public                |
-| Service Detail     | `/services/:id`   | Public                |
-| Dashboard          | `/admin`          | Auth Only             |
-| Admin Service List | `/admin/services` | Admin/Freelancer Only |
-| Admin Booking List | `/admin/booking`  | Auth Only             |
-| User Management    | `/admin/user`     | Admin Only            |
+| Page            | Path                       | Access                |
+| --------------- | -------------------------- | --------------------- |
+| Home            | `/`                        | Public                |
+| Login           | `/login`                   | Public                |
+| Register        | `/register`                | Public                |
+| Contact         | `/contact`                 | Public                |
+| About           | `/about`                   | Public                |
+| Services List   | `/services`                | Public                |
+| Service Detail  | `/services/:id`            | Public                |
+| Dashboard       | `/admin`                   | Auth Only             |
+| Service List    | `/admin/services`          | Admin/Freelancer Only |
+| Edit Service    | `/admin/services/:id/edit` | Freelancer Only       |
+| Booking List    | `/admin/booking`           | Auth Only             |
+| User Management | `/admin/user`              | Admin Only            |
 
 ---
 
