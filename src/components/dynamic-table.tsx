@@ -30,6 +30,7 @@ import DeleteModal from './delete-model';
 import { Link } from 'react-router-dom';
 import { apiHelper } from '@/lib/api-helper';
 import { Badge } from '@/components/ui/badge';
+
 interface DynamicTableProps {
   data: any[];
   title?: string;
@@ -51,6 +52,7 @@ export default function DynamicTable({
   const [loadingStates, setLoadingStates] = useState<{
     [key: number]: boolean;
   }>({});
+
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('localtalent_user') || '{}'));
   }, []);
@@ -99,14 +101,20 @@ export default function DynamicTable({
     });
   }, [data, searchTerm, columns]);
 
-  // Paginate data
+  // Calculate total pages
   const totalPages = Math.ceil(filteredData.length / pageSize);
 
+  // Update pagination when dependencies change
   useEffect(() => {
-    setPaginatedData(
-      filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-    );
-  }, [data, searchTerm, columns]);
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    setPaginatedData(filteredData.slice(startIndex, endIndex));
+  }, [filteredData, currentPage, pageSize]);
+
+  // Reset to first page when search term or page size changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, pageSize]);
 
   // Format column header
   const formatHeader = (column: string) => {
@@ -155,46 +163,55 @@ export default function DynamicTable({
 
     return String(value);
   };
+
   async function approveOrReject(id: number, status: string) {
-    await apiHelper.put(
-      `/service/approve-or-reject/${id}`,
-      {
-        status,
-      },
-      { showToast: true }
-    );
+    setLoadingStates((prev) => ({ ...prev, [id]: true }));
 
-    // Update the local data to reflect the new status
+    try {
+      await apiHelper.put(
+        `/service/approve-or-reject/${id}`,
+        { status },
+        { showToast: true }
+      );
 
-    setPaginatedData(
-      paginatedData.map((item) => {
-        if (item.id === id) {
-          return { ...item, status }; // Update the status
-        }
-        return item;
-      })
-    );
+      // Update the local data to reflect the new status
+      setPaginatedData(
+        paginatedData.map((item) => {
+          if (item.id === id) {
+            return { ...item, status }; // Update the status
+          }
+          return item;
+        })
+      );
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [id]: false }));
+    }
   }
+
   async function handleBookingStatus(id: number, status: string) {
-    await apiHelper.put(
-      `/booking/status/${id}`,
-      {
-        status,
-      },
-      { showToast: true }
-    );
+    setLoadingStates((prev) => ({ ...prev, [id]: true }));
 
-    // Update the local data to reflect the new status
+    try {
+      await apiHelper.put(
+        `/booking/status/${id}`,
+        { status },
+        { showToast: true }
+      );
 
-    setPaginatedData(
-      paginatedData.map((item) => {
-        if (item.id === id) {
-          return { ...item, status }; // Update the status
-        }
-        return item;
-      })
-    );
+      // Update the local data to reflect the new status
+      setPaginatedData(
+        paginatedData.map((item) => {
+          if (item.id === id) {
+            return { ...item, status }; // Update the status
+          }
+          return item;
+        })
+      );
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [id]: false }));
+    }
   }
+
   return (
     <Card className='w-full'>
       <CardHeader>
@@ -220,7 +237,6 @@ export default function DynamicTable({
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1);
               }}
               className='pl-10'
             />
@@ -231,7 +247,6 @@ export default function DynamicTable({
               value={String(pageSize)}
               onValueChange={(value) => {
                 setPageSize(Number(value));
-                setCurrentPage(1);
               }}>
               <SelectTrigger className='w-[100px]'>
                 <SelectValue />
@@ -269,14 +284,14 @@ export default function DynamicTable({
               {paginatedData.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columns.length + 1}
                     className='text-center py-8 text-gray-500'>
                     No data found
                   </TableCell>
                 </TableRow>
               ) : (
                 paginatedData.map((item, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={item.id || index}>
                     {columns.map((column) => (
                       <TableCell key={column} className='whitespace-nowrap'>
                         {formatValue(getValue(item, column), column)}
