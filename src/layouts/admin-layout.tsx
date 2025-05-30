@@ -25,6 +25,8 @@ export default function AdminLayout() {
     const storedUser = localStorage.getItem('localtalent_user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    } else {
+      navigate('/auth/login');
     }
   }, []);
 

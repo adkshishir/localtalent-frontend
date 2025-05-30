@@ -38,8 +38,7 @@ const ServiceDetail = () => {
     fetchService();
   }, []);
   const handleBookingClick = () => {
-    setUser(JSON.parse(localStorage.getItem('localtalent_user') || '{}'));
-    if (!user) {
+    if (!localStorage.getItem('access_token')) {
       navigate('/auth/login');
       return;
     }
@@ -126,12 +125,12 @@ const ServiceDetail = () => {
                       <p className='text-sm text-gray-600 mb-4'>
                         {service.user?.bio}
                       </p>
-                      <div className='flex gap-2'>
+                      {/* <div className='flex gap-2'>
                         <Button variant='outline' size='sm' className='flex-1'>
                           <MessageCircle className='h-4 w-4 mr-2' />
                           Message
                         </Button>
-                      </div>
+                      </div> */}
                     </CardContent>
                   </Card>
 

@@ -277,7 +277,9 @@ export default function DynamicTable({
                     {formatHeader(column)}
                   </TableHead>
                 ))}
-                <TableHead className='whitespace-nowrap'>Actions</TableHead>
+                {!(user?.role == 'USER' && endpoint == 'booking') && (
+                  <TableHead className='whitespace-nowrap'>Actions</TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -321,7 +323,7 @@ export default function DynamicTable({
                               className='bg-green-600 hover:bg-green-700'>
                               <CheckCircle className='h-4 w-4 mr-1' />
                               {loadingStates[item.id]
-                                ? 'Approving...'
+                                ? 'Processing...'
                                 : 'Approve'}
                             </Button>
                             <Button
@@ -333,7 +335,7 @@ export default function DynamicTable({
                               disabled={loadingStates[item.id]}>
                               <XCircle className='h-4 w-4 mr-1' />
                               {loadingStates[item.id]
-                                ? 'Rejecting...'
+                                ? 'Processing...'
                                 : 'Reject'}
                             </Button>
                           </div>
@@ -350,7 +352,9 @@ export default function DynamicTable({
                             disabled={loadingStates[item.id]}
                             className='bg-green-600 hover:bg-green-700'>
                             <CheckCircle className='h-4 w-4 mr-1' />
-                            {loadingStates[item.id] ? 'Accepting...' : 'Accept'}
+                            {loadingStates[item.id]
+                              ? 'Processing...'
+                              : 'Accept'}
                           </Button>
                           <Button
                             size='sm'
@@ -361,7 +365,7 @@ export default function DynamicTable({
                             disabled={loadingStates[item.id]}>
                             <XCircle className='h-4 w-4 mr-1' />
                             {loadingStates[item.id]
-                              ? 'Declining...'
+                              ? 'Processing...'
                               : 'Decline'}
                           </Button>
                         </div>

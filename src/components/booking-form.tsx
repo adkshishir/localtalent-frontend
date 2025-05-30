@@ -37,6 +37,8 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { apiHelper } from '@/lib/api-helper';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // Form validation schema
 const bookingFormSchema = z.object({
@@ -66,7 +68,8 @@ interface BookingFormProps {
 const BookingForm = ({ service, onClose }: BookingFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
+  const { user } = useAuth();
+  const navigate = useNavigate();
   // Create a date object for today at start of day for proper comparison
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -111,10 +114,14 @@ const BookingForm = ({ service, onClose }: BookingFormProps) => {
   const calculateTotal = () => {
     if (!watchedDuration) return 0;
     const hourlyRate = Number(service.rate);
-    return hourlyRate * Number(watchedDuration);
+    return (hourlyRate * Number(watchedDuration)).toFixed(2);
   };
 
   const onSubmit = async (values: BookingFormValues) => {
+    if (!user) {
+      navigate('/auth/login');
+      return;
+    }
     setIsLoading(true);
     try {
       await apiHelper.post('/booking', {
