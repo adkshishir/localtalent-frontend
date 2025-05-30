@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Star, Filter } from 'lucide-react';
 import axios from 'axios';
 import { VITE_API_BASE_URL } from '@/lib/api';
+import { Skeleton } from '@/components/ui/skeleton';
 type serviceType = {
   id: number;
   title: string;
@@ -44,7 +45,9 @@ const Services = () => {
   const [services, setServices] = useState<serviceType[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [filteredServices, setFilteredServices] = useState<serviceType[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
+    setLoading(true);
     const fetchServices = async () => {
       const res = await axios.get(VITE_API_BASE_URL + '/service');
       const result = await res.data.data;
@@ -52,6 +55,7 @@ const Services = () => {
       const categories = result.map((service: serviceType) => service.category);
       const uniqueCategories = Array.from(new Set(categories));
       setCategories(uniqueCategories as string[]);
+      setLoading(false);
     };
     fetchServices();
   }, []);
@@ -125,43 +129,66 @@ const Services = () => {
 
         {/* Services Grid */}
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {filteredServices.map((service) => (
-            <Card
-              key={service.id}
-              className='overflow-hidden hover:shadow-lg transition-shadow'>
-              <div className='aspect-video relative'>
-                <img
-                  src={service.imageUrl}
-                  alt={service.title}
-                  className='w-full h-full object-cover'
-                />
-                <Badge className='absolute top-2 left-2 bg-white text-gray-900'>
-                  {service.category || 'Category'}
-                </Badge>
-              </div>
-              <CardHeader>
-                <div className='flex justify-between items-start'>
-                  <CardTitle className='text-lg'>{service.title}</CardTitle>
-                </div>
-                <CardDescription>{service.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className='flex justify-between items-center'>
-                  <p className='text-sm text-gray-600'>
-                    by {service.user.name}
-                  </p>
-                  <p className='font-semibold text-blue-800'>
-                    ${service.rate}/hour
-                  </p>
-                </div>
-                <Link to={`/services/${service.id}`} className='block mt-4'>
-                  <Button className='w-full bg-gradient-to-r from-blue-800 to-purple-800 hover:from-blue-900 hover:to-purple-900'>
-                    View Details
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
+          {!loading
+            ? filteredServices.map((service) => (
+                <Card
+                  key={service.id}
+                  className='overflow-hidden hover:shadow-lg transition-shadow'>
+                  <div className='aspect-video relative'>
+                    <img
+                      src={service.imageUrl}
+                      alt={service.title}
+                      className='w-full h-full object-cover'
+                    />
+                    <Badge className='absolute top-2 left-2 bg-white text-gray-900'>
+                      {service.category || 'Category'}
+                    </Badge>
+                  </div>
+                  <CardHeader>
+                    <div className='flex justify-between items-start'>
+                      <CardTitle className='text-lg'>{service.title}</CardTitle>
+                    </div>
+                    <CardDescription>{service.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='flex justify-between items-center'>
+                      <p className='text-sm text-gray-600'>
+                        by {service.user.name}
+                      </p>
+                      <p className='font-semibold text-blue-800'>
+                        ${service.rate}/hour
+                      </p>
+                    </div>
+                    <Link to={`/services/${service.id}`} className='block mt-4'>
+                      <Button className='w-full bg-gradient-to-r from-blue-800 to-purple-800 hover:from-blue-900 hover:to-purple-900'>
+                        View Details
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))
+            : Array.from({ length: 9 }).map((_, index) => (
+                <Card
+                  key={index}
+                  className='overflow-hidden hover:shadow-lg transition-shadow'>
+                  <div className='aspect-video relative'>
+                    <Skeleton className='w-full h-full object-cover' />
+                  </div>
+                  <CardHeader>
+                    <div className='flex justify-between items-start'>
+                      <CardTitle className='text-lg'>
+                        <Skeleton />
+                      </CardTitle>
+                    </div>
+                    <CardDescription>
+                      <Skeleton />
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton />
+                  </CardContent>
+                </Card>
+              ))}
         </div>
 
         {filteredServices.length === 0 && (

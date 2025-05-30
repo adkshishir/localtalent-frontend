@@ -12,6 +12,7 @@ import { Search, Clock, Shield, MoveRightIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { VITE_API_BASE_URL } from '@/lib/api';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type serviceType = {
   id: number;
@@ -33,11 +34,14 @@ type serviceType = {
 };
 const Index = () => {
   const [services, setServices] = useState<serviceType[]>([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     const fetchServices = async () => {
       const res = await axios.get(VITE_API_BASE_URL + '/service');
       const result = await res.data.data;
       setServices(await result);
+      setLoading(false);
     };
     fetchServices();
   }, []);
@@ -120,7 +124,9 @@ const Index = () => {
       <section className='py-16 bg-white'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center mb-12'>
-            <h2 className='text-3xl max-lg:text-xl font-bold'>Featured Services</h2>
+            <h2 className='text-3xl max-lg:text-xl font-bold'>
+              Featured Services
+            </h2>
             <Link
               className='hover:underline max-lg:text-sm flex gap-2 items-center text-blue-800 hover:text-purple-800'
               to='/services'>
@@ -131,50 +137,76 @@ const Index = () => {
           </div>
 
           <div className='grid md:grid-cols-3 gap-6'>
-            {services.map(
-              (service, index) =>
-                index < 3 && (
+            {!loading
+              ? services.map(
+                  (service, index) =>
+                    index < 3 && (
+                      <Card
+                        key={service.id}
+                        className='overflow-hidden hover:shadow-lg transition-shadow'>
+                        <div className='aspect-video relative'>
+                          <img
+                            src={service.imageUrl}
+                            alt={service.title}
+                            className='w-full h-full object-cover'
+                          />
+                          <Badge className='absolute top-2 left-2 bg-white text-gray-900'>
+                            {service.category || 'Category'}
+                          </Badge>
+                        </div>
+                        <CardHeader>
+                          <div className='flex justify-between items-start'>
+                            <CardTitle className='text-lg'>
+                              {service.title}
+                            </CardTitle>
+                          </div>
+                          <CardDescription>
+                            {service.description}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className='flex justify-between items-center'>
+                            <p className='text-sm text-gray-600'>
+                              by {service.user.name}
+                            </p>
+                            <p className='font-semibold text-blue-800'>
+                              ${service.rate}/hour
+                            </p>
+                          </div>
+                          <Link
+                            to={`/services/${service.id}`}
+                            className='block mt-4'>
+                            <Button className='w-full bg-gradient-to-r from-blue-800 to-purple-800 hover:from-blue-900 hover:to-purple-900'>
+                              View Details
+                            </Button>
+                          </Link>
+                        </CardContent>
+                      </Card>
+                    )
+                )
+              : // loading cards
+                Array.from({ length: 3 }).map((_, index) => (
                   <Card
-                    key={service.id}
+                    key={index}
                     className='overflow-hidden hover:shadow-lg transition-shadow'>
                     <div className='aspect-video relative'>
-                      <img
-                        src={service.imageUrl}
-                        alt={service.title}
-                        className='w-full h-full object-cover'
-                      />
-                      <Badge className='absolute top-2 left-2 bg-white text-gray-900'>
-                        {service.category || 'Category'}
-                      </Badge>
+                      <Skeleton className='w-full h-full object-cover' />
                     </div>
                     <CardHeader>
                       <div className='flex justify-between items-start'>
                         <CardTitle className='text-lg'>
-                          {service.title}
+                          <Skeleton />
                         </CardTitle>
                       </div>
-                      <CardDescription>{service.description}</CardDescription>
+                      <CardDescription>
+                        <Skeleton />
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className='flex justify-between items-center'>
-                        <p className='text-sm text-gray-600'>
-                          by {service.user.name}
-                        </p>
-                        <p className='font-semibold text-blue-800'>
-                          ${service.rate}/hour
-                        </p>
-                      </div>
-                      <Link
-                        to={`/services/${service.id}`}
-                        className='block mt-4'>
-                        <Button className='w-full bg-gradient-to-r from-blue-800 to-purple-800 hover:from-blue-900 hover:to-purple-900'>
-                          View Details
-                        </Button>
-                      </Link>
+                      <Skeleton />
                     </CardContent>
                   </Card>
-                )
-            )}
+                ))}
           </div>
         </div>
       </section>

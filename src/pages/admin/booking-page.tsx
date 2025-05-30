@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 
 const BookingPage = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const user = JSON.parse(localStorage.getItem('localtalent_user') || '{}');
       const url =
         user.role === 'FREELANCER'
@@ -17,25 +19,30 @@ const BookingPage = () => {
         showToast: false,
       });
       setData(await result);
+      setLoading(false);
     };
 
     fetchData();
   }, []);
   return (
     <div>
-      <DynamicTable
-        endpoint='booking'
-        data={
-          data?.map((item: any) => ({
-            id: item.id,
-            Service: item.service?.title || 'N/A',
-            status: item.status,
-            date: new Date(item.date).toLocaleDateString(),
-            time: item.time,
-          })) || []
-        }
-        title='Booking List'
-      />
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <DynamicTable
+          endpoint='booking'
+          data={
+            data?.map((item: any) => ({
+              id: item.id,
+              Service: item.service?.title || 'N/A',
+              status: item.status,
+              date: new Date(item.date).toLocaleDateString(),
+              time: item.time,
+            })) || []
+          }
+          title='Booking List'
+        />
+      )}
     </div>
   );
 };
