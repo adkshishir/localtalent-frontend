@@ -40,6 +40,7 @@ const Header = () => {
   };
 
   const navigationItems = [
+    { to: '/', label: 'Home' },
     { to: '/services', label: ' Services' },
     // { to: '/how-it-works', label: 'How It Works' },
     { to: '/about', label: 'About' },
