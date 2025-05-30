@@ -190,13 +190,13 @@ const Header = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => navigate('/dashboard')}
+                    onClick={() => navigate('/admin')}
                     className='cursor-pointer'>
                     <User className='mr-2 h-4 w-4' />
                     <span>Dashboard</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => navigate('/bookings')}
+                    onClick={() => navigate('/admin/bookings')}
                     className='cursor-pointer'>
                     <Calendar className='mr-2 h-4 w-4' />
                     <span>My Bookings</span>
