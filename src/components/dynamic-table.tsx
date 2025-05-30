@@ -277,7 +277,7 @@ export default function DynamicTable({
                     {formatHeader(column)}
                   </TableHead>
                 ))}
-                {!(user?.role == 'USER' && endpoint == 'booking') && (
+                {!(user?.role == 'USER'|| user?.role == 'ADMIN' && endpoint == 'booking') && (
                   <TableHead className='whitespace-nowrap'>Actions</TableHead>
                 )}
               </TableRow>
