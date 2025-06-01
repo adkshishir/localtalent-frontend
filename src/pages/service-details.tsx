@@ -165,7 +165,7 @@ const ServiceDetail = () => {
               </div>
             )}
             {/* Booking Modal */}
-            {showBooking && user && (
+            {showBooking && (
               <BookingForm
                 service={service}
                 onClose={() => setShowBooking(false)}
